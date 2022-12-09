@@ -16,7 +16,6 @@ use near_sdk::json_types::U128;
 const MIN_STORAGE: Balance = 1_100_000_000_000_000_000_000_000; //1.1Ⓝ
 const TOKENS_FOR_COFFEE: U128 = U128(10);
 const TGAS: Gas = Gas(10u64.pow(12));
-const NO_DEPOSIT: Balance = 0;
 const MIN_GAS_FOR_STORAGE_DEPOSIT:Gas = Gas(100);
 
 
@@ -51,16 +50,15 @@ impl Contract {
     }
 
     fn create_account(&self, prefix: String, public_key: PublicKey) -> Promise{
-        let account_id = prefix + "." + env::current_account_id().as_str();
+        let account_id = prefix + "." + env::predecessor_account_id().as_str();
         Promise::new(account_id.parse().unwrap())
         .create_account()
         .transfer(MIN_STORAGE)
         .add_full_access_key(public_key)
     }
     
-    #[private]
     pub fn pay_for_coffee_with_card(&mut self, prefix: String, public_key: PublicKey) -> Promise {
-        
+        //TODO check if merchant
         let transfer = self.transfer_tokens(self.get_account_id_for_prefix(&prefix));
 
         let contains = !self.subaccounts.contains(&prefix);
@@ -82,7 +80,7 @@ impl Contract {
                 MIN_GAS_FOR_STORAGE_DEPOSIT,
             );
 
-            let create_and_register = create.and(register); //ADD register
+            let create_and_register = create.and(register);
             return create_and_register.then(transfer);
         } else {
             transfer
@@ -100,7 +98,7 @@ impl Contract {
             .function_call(
                 "ft_transfer".to_owned(),
                 ft_transfer_args,
-                NO_DEPOSIT,
+                1,
                 TGAS * 20,
             );
 

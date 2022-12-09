@@ -58,7 +58,7 @@ impl Contract {
         let attached_for_manager = attached /2;
 
         let ft_init_args = near_sdk::serde_json::to_vec(&FungibleTokenInitArgs {
-            owner_id: user,
+            owner_id: manager_subaccount.clone(),
             name: token_name.clone(),
             symbol: token_symbol.clone(),
             total_supply: token_total_supply,

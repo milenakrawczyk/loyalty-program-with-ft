@@ -5,11 +5,17 @@ import './assets/global.css';
 
 import { SignOutButton } from './ui-components';
 
-export default function App({ isSignedIn, factory, wallet, MERCHANT_ADDRESS }) {
+export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_ADDRESS }) {
   const [programExists, setProgramExists] = React.useState(false);
   const [uiPleaseWait, setUiPleaseWait] = React.useState(true);
 
-  const [ftMetadata, setFTMeta] = React.useState({});
+  const [ftMetadata, setFtMetadata] = React.useState({});
+  const [ftName, setFtName] = React.useState("");
+  const [ftSymbol, setFtSymbol] = React.useState("");
+  const [ftTotalSupply, setFtTotalSupply] = React.useState("");
+  const [ftAccountId, setFtAccountId] = React.useState("");
+
+
   const [name, setName] = React.useState("");
   const [symbol, setSymbol] = React.useState("");
   const [totalSupply, setTotalSupply] = React.useState("");
@@ -17,28 +23,29 @@ export default function App({ isSignedIn, factory, wallet, MERCHANT_ADDRESS }) {
 
   // Get blockchain state once on component load
   React.useEffect(() => {
-    async function start() {
-      const programExists = await factory.checkProgramExists(MERCHANT_ADDRESS)
-      setProgramExists(programExists)
-
-      if (programExists) {
-        const { ft } = await factory.getProgram(MERCHANT_ADDRESS)
-        setFTMeta(ft);
-      }
-
-      setUiPleaseWait(false);
-    }
-    start();
+    factory.checkProgramExists(MERCHANT_ADDRESS)
+      .then(programExists =>{
+        setProgramExists(programExists);
+      })
+      .finally(() => setUiPleaseWait(false));
   }, []);
 
   React.useEffect(() => {
     if (programExists) { 
       setUiPleaseWait(true);
       factory.getProgram(MERCHANT_ADDRESS)
-        .then(metadata => setFTMeta(metadata))
-        .finally(() => setUiPleaseWait(false))
+        .then(metadata => {
+          setFtMetadata(metadata.ft);
+        })
+        .finally(() => setUiPleaseWait(false));
     }
   }, [programExists]);
+
+
+  function buyCoffeeWithCC(e) {
+    customer.payForCoffeeWithCC().then(() => console.log("COFFE BOUGHT"));
+  }
+
 
   function createLoyaltyToken(e) {
 
@@ -74,6 +81,10 @@ export default function App({ isSignedIn, factory, wallet, MERCHANT_ADDRESS }) {
         <div className="change">
           { isSignedIn && programExists &&
             <>
+              <button className='btn btn-primary' onClick={buyCoffeeWithCC}>
+                <span>(Customer) Buy coffee with CC</span>
+                <div className="loader"></div>
+              </button>
               <p> Here is your program data</p>
 
               <div className="ftDetailsWrapper">
@@ -103,7 +114,7 @@ export default function App({ isSignedIn, factory, wallet, MERCHANT_ADDRESS }) {
           {isSignedIn ?
             <SignOutButton className="btn btn-primary" accountId={wallet.accountId} onClick={() => wallet.signOut()} />
             :
-            <button className="btn btn-primary" onClick={()=>{wallet.signIn()}}>Sign in with NEAR</button>
+            <button className="btn btn-primary" onClick={() => wallet.signIn()}>Sign in with NEAR</button>
           }
         </div>
       </div>
