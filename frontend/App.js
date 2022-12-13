@@ -43,12 +43,12 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
 
 
   function buyCoffeeWithCC(e) {
-    customer.payForCoffeeWithCC().then(() => console.log("COFFE BOUGHT"));
+    customer.payForCoffeeWithCC()
+      .then(() => console.log("COFFE BOUGHT"))
+      .catch(alert);
   }
 
-
   function createLoyaltyToken(e) {
-
     if (totalSupply <= 0) {
       setErrorMessage("Total supply should be > 0");
       return;

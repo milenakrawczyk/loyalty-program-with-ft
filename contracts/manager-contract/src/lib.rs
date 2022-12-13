@@ -49,9 +49,8 @@ impl Contract {
         };
     }
 
-    fn create_account(&self, prefix: String, public_key: PublicKey) -> Promise{
-        let account_id = prefix + "." + env::predecessor_account_id().as_str();
-        Promise::new(account_id.parse().unwrap())
+    fn create_account(&self, customer_account: AccountId, public_key: PublicKey) -> Promise{
+        Promise::new(customer_account)
         .create_account()
         .transfer(MIN_STORAGE)
         .add_full_access_key(public_key)
@@ -59,16 +58,17 @@ impl Contract {
     
     pub fn pay_for_coffee_with_card(&mut self, prefix: String, public_key: PublicKey) -> Promise {
         //TODO check if merchant
-        let transfer = self.transfer_tokens(self.get_account_id_for_prefix(&prefix));
+        let customer_account = self.get_account_id_for_prefix(&prefix);
+        let transfer = self.transfer_tokens(customer_account.clone());
 
-        let contains = !self.subaccounts.contains(&prefix);
+        let contains = self.subaccounts.contains(&prefix);
         // check if account exists
         if !contains {
-            let create = self.create_account(prefix.clone(), public_key);
+            let create = self.create_account(customer_account.clone(), public_key);
             self.subaccounts.insert(&prefix);
             // let register = regoister the account in ft contract
             // chain promises
-            let deposit_args = json!({ "account_id": self.get_account_id_for_prefix(&prefix) })
+            let deposit_args = json!({ "account_id": customer_account })
                 .to_string()
                 .into_bytes()
                 .to_vec();
@@ -103,13 +103,14 @@ impl Contract {
             );
 
         // Add callback
-        promise.then(
-            Self::ext(env::current_account_id())
-                .with_static_gas(TGAS * 5)
-                .transfer_tokens_callback(
-                    to,
-                ),
-        )
+        // promise.then(
+        //     Self::ext(env::current_account_id())
+        //         .with_static_gas(TGAS * 5)
+        //         .transfer_tokens_callback(
+        //             to,
+        //         ),
+        // )
+        promise
     }
 
     #[private]
@@ -131,7 +132,7 @@ impl Contract {
     }
 
     fn get_account_id_for_prefix(&self, prefix: &str) -> AccountId {
-        let res: String = prefix.to_owned() + "." + env::predecessor_account_id().as_str();
+        let res: String = prefix.to_owned() + "." + env::current_account_id().as_str();
         return res.parse().unwrap();
     }
 
