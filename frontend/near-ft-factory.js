@@ -20,7 +20,9 @@ export class Factory {
       },
       deposit: DEPOSIT,
       gas: MAX_TGAS,
-    })
+    });
+
+    //TODO pass function call key to the backend
   }
 
   async checkProgramExists(account_id) {
@@ -29,5 +31,25 @@ export class Factory {
 
   async getProgram(account_id) {
     return await this.wallet.viewMethod({ contractId: this.contractId, method: 'user_program', args: { account_id } })
+  }
+
+  async addFunctionCallKey() {
+    // get account id to get the manager contract id 
+    const keyPair = this.createKeyPair();
+    const managerContractId = "";
+    //this.wallet.account_id
+    // adds function access key
+    await this.wallet.account.addKey(
+    // const account = await nearConnection.account("example-account.testnet");
+    // await account.addKey(
+      keyPair.getPublicKey().toString(), // public key for new account
+      managerContractId, // contract this key is allowed to call (optional)
+      "create_and_transfer", // methods this key is allowed to call (optional)
+      "2500000000000" // allowance key can use to call methods (optional)
+    );
+  }
+
+  createKeyPair() {
+    return utils.key_pair.KeyPairEd25519.fromRandom();
   }
 }

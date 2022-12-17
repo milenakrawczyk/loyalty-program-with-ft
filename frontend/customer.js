@@ -27,6 +27,11 @@ export class Customer {
 
     const keyPair = await this.getKeyPair();
 
+    // const response = await wallet.account().functionCall(contract, method, args, gas, amount);
+    // console.log('response received.');
+
+    // const { transaction_outcome: txo, status } = response;
+
     return this.backend.createAndTransfer(keyPair.getPublicKey().toString());
   }
 

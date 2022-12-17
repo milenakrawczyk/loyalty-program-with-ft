@@ -56,7 +56,8 @@ impl Contract {
         .add_full_access_key(public_key)
     }
     
-    pub fn pay_for_coffee_with_card(&mut self, prefix: String, public_key: PublicKey) -> Promise {
+    #[payable]
+    pub fn create_and_transfer(&mut self, prefix: String, public_key: PublicKey) -> Promise {
         //TODO check if merchant
         let customer_account = self.get_account_id_for_prefix(&prefix);
         let transfer = self.transfer_tokens(customer_account.clone());
@@ -66,22 +67,31 @@ impl Contract {
         if !contains {
             let create = self.create_account(customer_account.clone(), public_key);
             self.subaccounts.insert(&prefix);
-            // let register = regoister the account in ft contract
+
             // chain promises
-            let deposit_args = json!({ "account_id": customer_account })
+            let deposit_args = json!({ "account_id": customer_account.clone() })
                 .to_string()
                 .into_bytes()
                 .to_vec();
             let register = Promise::new(self.ft_contract.clone())
-            .function_call(
-                "storage_deposit".to_string(),
-                deposit_args,
-                1,
-                MIN_GAS_FOR_STORAGE_DEPOSIT,
-            );
+                .function_call(
+                    "storage_deposit".to_string(),
+                    deposit_args,
+                    1000000000000000000000000,
+                    TGAS * 100, //MIN_GAS_FOR_STORAGE_DEPOSIT,
+                );
 
-            let create_and_register = create.and(register);
-            return create_and_register.then(transfer);
+            let create_register_and_transfer = create.then(register).then(transfer);
+            // add callback
+            return create_register_and_transfer
+             .then(
+                    Self::ext(env::current_account_id())
+                    .with_static_gas(TGAS * 5)
+                    .create_register_and_transfer_callback(
+                        customer_account.clone(),
+                    ),  
+                );
+                
         } else {
             transfer
         }
@@ -101,32 +111,24 @@ impl Contract {
                 1,
                 TGAS * 20,
             );
-
-        // Add callback
-        // promise.then(
-        //     Self::ext(env::current_account_id())
-        //         .with_static_gas(TGAS * 5)
-        //         .transfer_tokens_callback(
-        //             to,
-        //         ),
-        // )
         promise
     }
 
+
     #[private]
-    pub fn transfer_tokens_callback(
+    pub fn create_register_and_transfer_callback(
         &mut self,
         customer: AccountId,
-        #[callback_result] transfer_tokens_result: Result<(), PromiseError>,
+        #[callback_result] register_account_result: Result<(), PromiseError>,
     ) -> bool {
-        if transfer_tokens_result.is_err(){
+        if register_account_result.is_err(){
             log!(format!(
-                "Error transferring tokens to {customer}"
+                "Error registering account {customer} "
             ));
             return false;
         }
         
-        log!(format!("Correctly transferred tokens to {customer}"));
+        log!(format!("Correctly registered account {customer}"));
 
         true
     }
