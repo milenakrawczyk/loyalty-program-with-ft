@@ -10,9 +10,19 @@ export class Customer {
     this.backend = backend;
   }
 
-  async payForCoffeeWithCC() {
+  async purchaseCoffeeWithCC() {
     if (!(await this.getKeyPair())) {
         await this.createKeyPair();
+    }
+
+    const keyPair = await this.getKeyPair();
+
+    return this.backend.createAndTransfer(keyPair.getPublicKey().toString());
+  }
+
+  async purchaseCoffeeWithTokens() {
+    if (!(await this.getKeyPair())) {
+        throw Error("You need to buy coffee with CC first");
     }
 
     const keyPair = await this.getKeyPair();

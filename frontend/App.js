@@ -3,11 +3,12 @@ import React from 'react';
 
 import './assets/global.css';
 
-import { SignOutButton } from './ui-components';
+import { SignOutButton, Toggle } from './ui-components';
 
 export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_ADDRESS }) {
   const [programExists, setProgramExists] = React.useState(false);
   const [uiPleaseWait, setUiPleaseWait] = React.useState(true);
+  const [customerView, setCustomerView] = React.useState(false);
 
   const [ftMetadata, setFtMetadata] = React.useState({});
   const [ftName, setFtName] = React.useState("");
@@ -42,10 +43,14 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
   }, [programExists]);
 
 
-  function buyCoffeeWithCC(e) {
-    customer.payForCoffeeWithCC()
+  function purchaseWithCC(e) {
+    customer.purchaseCoffeeWithCC()
       .then(() => console.log("COFFE BOUGHT"))
       .catch(alert);
+  }
+
+  function purchaseWithTokens(e) {
+    console.log("BOUGHT");
   }
 
   function createLoyaltyToken(e) {
@@ -72,8 +77,40 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
       });
   }
 
+  function switchView() {
+    setCustomerView(!customerView);
+  }
+
   return (
     <div className='main'>
+      <form>
+        <Toggle
+          text={customerView ? "Customer" : "Merchant"}
+          onChange={switchView}
+          checked={customerView}
+        />
+      </form>
+      {customerView ? 
+        <div className="container">
+          <h1>
+            Customer view
+          </h1>
+          <div className="change">
+            <span className="ftDetails"> 1 Large Coffee </span>
+            <span className="ftDetails"> 3$ </span>
+            <span className="ftDetails"> 30 Tokens </span>
+            <hr/>
+            <button className='btn btn-primary' onClick={purchaseWithCC}>
+              <span>Purchase with CC</span>
+              <div className="loader"></div>
+            </button>
+            <button className='btn btn-primary' onClick={purchaseWithTokens}>
+              <span>Purchase with Tokens</span>
+              <div className="loader"></div>
+            </button>
+          </div>
+        </div>
+      : (
       <div className={uiPleaseWait ? 'please-wait' : 'container'}>
         <h1>
           Merchant view
@@ -81,10 +118,6 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
         <div className="change">
           { isSignedIn && programExists &&
             <>
-              <button className='btn btn-primary' onClick={buyCoffeeWithCC}>
-                <span>(Customer) Buy coffee with CC</span>
-                <div className="loader"></div>
-              </button>
               <p> Here is your program data</p>
 
               <div className="ftDetailsWrapper">
@@ -117,9 +150,12 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
             <button className="btn btn-primary" onClick={() => wallet.signIn()}>Sign in with NEAR</button>
           }
         </div>
+      
       </div>
+      )}
 
       <div className="error">{errorMessage}</div>
+      
 
     </div>
   );
