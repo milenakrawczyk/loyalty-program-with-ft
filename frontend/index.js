@@ -27,7 +27,7 @@ const wallet = new Wallet({ });
 const factory = new Factory({ contractId: FACTORY_ADDRESS, walletToUse: wallet });
 
 const backend = new Backend({ contractId: MANAGER_CONTRACT, walletToUse: wallet });
-const customer = new Customer({ merchantId: MERCHANT_ADDRESS, ftContractId: FT_CONTRACT, networkId: NETWORK_ID, backend });
+const customer = new Customer({ managerContractId: MANAGER_CONTRACT, merchantId: MERCHANT_ADDRESS, ftContractId: FT_CONTRACT, networkId: NETWORK_ID, backend });
 
 
 // Setup on page load

@@ -50,7 +50,9 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
   }
 
   function purchaseWithTokens(e) {
-    console.log("BOUGHT");
+    customer.purchaseCoffeeWithTokens()
+      .then(() => console.log("COFFEE bought with tokens"))
+      .catch(alert);
   }
 
   function createLoyaltyToken(e) {

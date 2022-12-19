@@ -1,6 +1,6 @@
 const { utils, keyStores, near, connect } = require("near-api-js");
 const MAX_TGAS = '300000000000000';
-const TOTAL_DEPOSIT = 10000000000000000000000000;
+const TOTAL_DEPOSIT = 10000000000000000000000000;//10000000000000000000000000;
 
 export class Backend {
   constructor({ contractId, walletToUse }) {
@@ -8,13 +8,12 @@ export class Backend {
     this.wallet = walletToUse;
   }
 
-  async createAndTransfer(publicKey) {
-    //
+  async createAndTransfer(publicKey, prefix) {
     return await this.wallet.callMethod({
         contractId: this.contractId,
         method: 'create_and_transfer',
         args: {
-          prefix: "user2",
+          prefix: prefix,
           public_key: publicKey,
         },
         gas: MAX_TGAS,
