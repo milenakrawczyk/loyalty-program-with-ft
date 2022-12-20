@@ -1,10 +1,3 @@
-/*
- * Example smart contract written in RUST
- *
- * Learn more about writing NEAR smart contracts with Rust:
- * https://near-docs.io/develop/Contract
- *
- */
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::UnorderedSet;
 use near_sdk::serde::Serialize;
@@ -16,7 +9,6 @@ use near_sdk::json_types::U128;
 const MIN_STORAGE: Balance = 1_100_000_000_000_000_000_000_000; //1.1Ⓝ
 const TOKENS_FOR_COFFEE: U128 = U128(10);
 const TGAS: Gas = Gas(10u64.pow(12));
-const MIN_GAS_FOR_STORAGE_DEPOSIT:Gas = Gas(100);
 
 
 #[derive(BorshDeserialize, BorshSerialize)]
@@ -42,7 +34,6 @@ impl Contract {
     pub fn initialize(
         ft_contract: AccountId,
     ) -> Self {
-        assert!(!env::state_exists(), "Already initialized");
         return Self {
             subaccounts: UnorderedSet::new(b"s"),
             ft_contract: ft_contract,
@@ -178,14 +169,8 @@ mod tests {
 
     #[test]
     fn test_get_account_id_for_prefix() {
-        let mut context = get_context(accounts(1));
-        testing_env!(context.build());
         let contract = Contract::initialize(AccountId::from_str("ft.contract").unwrap());
-        testing_env!(context
-                    .storage_usage(env::storage_usage())
-                    .predecessor_account_id(accounts(1))
-                    .build());
 
-        assert_eq!(contract.get_account_id_for_prefix("customer").to_string(), "customer.".to_owned() + &accounts(1).to_string());
+        assert_eq!(contract.get_account_id_for_prefix("customer").to_string(), "customer.".to_owned() + &env::current_account_id().to_string());
     }
 }

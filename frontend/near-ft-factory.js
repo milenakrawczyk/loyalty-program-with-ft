@@ -1,7 +1,6 @@
 /* Interface to talk with the contract factory */
 const MAX_TGAS = '300000000000000';
-const DEPOSIT = '15000000000000000000000000';//'7770000000000000000000000';
-const FT_CONTRACT_NAME = "ft";
+const DEPOSIT = '3829450000000000000000000';//'7770000000000000000000000';
 
 export class Factory {
   constructor({ contractId, walletToUse }) {

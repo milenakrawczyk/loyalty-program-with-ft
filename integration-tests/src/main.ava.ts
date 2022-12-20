@@ -10,7 +10,7 @@ const test = anyTest as TestFn<{
 }>;
 
 const MAX_GAS = "300000000000000";
-const TOTAL_DEPOSIT = "7770000000000000000000000";
+const TOTAL_DEPOSIT = "3829450000000000000000000";
 
 test.beforeEach(async (t) => {
   // Init the worker and start a Sandbox server
