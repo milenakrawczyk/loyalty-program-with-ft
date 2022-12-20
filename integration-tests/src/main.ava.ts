@@ -1,7 +1,7 @@
 import { Worker, NearAccount, NEAR } from "near-workspaces";
 import anyTest, { TestFn } from "ava";
 import { Near } from "near-api-js";
-const { utils, keyStores, connect } = require("near-api-js");
+const { utils, keyStore } = require("near-api-js");
 
 
 const test = anyTest as TestFn<{
@@ -10,7 +10,8 @@ const test = anyTest as TestFn<{
 }>;
 
 const MAX_GAS = "300000000000000";
-const TOTAL_DEPOSIT = "7770000000000000000000000";
+const TOTAL_DEPOSIT = "30000000000000000000000000";
+
 
 test.beforeEach(async (t) => {
   // Init the worker and start a Sandbox server
@@ -78,46 +79,3 @@ interface Program {
   ft: FTMetadata
   manager: string
 }
-
-test("set access key tests", async (t) => {
-  const { factory, merchant } = t.context.accounts;
-
-  let create = await merchant.call(
-    factory,
-    "create_factory_subaccount_and_deploy",
-    {
-      token_name: "ft",
-      token_symbol: "ft",
-      token_total_supply: "10000",
-    },
-    { gas: MAX_GAS, attachedDeposit: TOTAL_DEPOSIT }
-  );
-
-  t.true(create);
-
-  let manager = factory.getSubAccount("merchant-manager");
-  const keyPair = utils.key_pair.KeyPairEd25519.fromRandom();
-  let setAccessKey = await merchant.call(
-    manager,
-    "set_access_key",
-    {
-        public_key: keyPair.getPublicKey().toString(),
-        allowance: "300000000000000000000000",
-    },
-    { gas: MAX_GAS }
-  );
-  t.true(setAccessKey);
-  // const keyPair = utils.key_pair.KeyPairEd25519.fromRandom();
-  // let manager = factory.getSubAccount("merchant-manager");
-  
-  // let create_and_transfer = await manager.call(
-  //   manager,
-  //   "create_and_transfer",
-  //   {
-  //       prefix: "user3",
-  //       public_key: keyPair.getPublicKey().toString(),
-  //   },
-  //   { gas: MAX_GAS, attachedDeposit: TOTAL_DEPOSIT }
-  // );
-  // t.true(create_and_transfer);
-});

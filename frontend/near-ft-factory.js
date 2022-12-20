@@ -1,8 +1,8 @@
 /* Interface to talk with the contract factory */
-const { utils, keyStores, connect, Contract } = require("near-api-js");
+const { utils } = require("near-api-js");
 
 const MAX_TGAS = '300000000000000';
-const DEPOSIT = '30000000000000000000000000'; //'15000000000000000000000000';//'7770000000000000000000000';
+const DEPOSIT = '30000000000000000000000000';
 const NO_DEPOSIT = '0';
 
 export class Factory {

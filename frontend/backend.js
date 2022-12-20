@@ -1,19 +1,18 @@
-const { utils, keyStores, connect, Contract } = require("near-api-js");
+const { keyStores, connect, Contract } = require("near-api-js");
 const MAX_TGAS = '300000000000000';
 const TOTAL_DEPOSIT = "100000000000000000000000";//10000000000000000000000000;
 
 export class Backend {
-  constructor({ contractId, walletToUse, networkId }) {
+  constructor({ contractId, networkId }) {
     this.contractId = contractId;
-    this.wallet = walletToUse;
     this.keyStore = new keyStores.BrowserLocalStorageKeyStore();
     this.networkId = networkId;
   }
 
   async createAndTransfer(publicKey, prefix) {
-    // if (!(await this.getKeyPair())) {
-    //   throw new Error("You need to pass a function call access key to the backend first.");
-    // }
+    if (!(await this.getKeyPair())) {
+      throw new Error("You need to pass a function call access key to the backend first.");
+    }
 
     const keyPair = await this.getKeyPair();
     const inMemoryKeyStore = new keyStores.InMemoryKeyStore()
@@ -29,43 +28,26 @@ export class Backend {
     };
     
     this.nearConnection = await connect(connectionConfig);
-    console.log(this.nearConnection.connection);
-
     
     const account = await this.nearConnection.account(this.getAccountName());
-    console.log(account.accountId);
 
     const managerContract = new Contract(
-      account, // the account object that is connecting
+      account,
       this.contractId,
       {
-        viewMethods: [], // view methods do not change state but usually return a value
+        viewMethods: [],
         changeMethods: ["create_and_transfer"],
       }
     );
 
-    const res = await managerContract.create_and_transfer(
+    return await managerContract.create_and_transfer(
       {
         prefix: prefix,
         public_key: publicKey,
       },
-      MAX_TGAS, // attached GAS (optional)
-      TOTAL_DEPOSIT // attached deposit in yoctoNEAR (optional)
+      MAX_TGAS,
+      TOTAL_DEPOSIT
     );
-
-    console.log(res);
-
-
-    // return await this.wallet.callMethod({
-    //     contractId: this.contractId,
-    //     method: 'create_and_transfer',
-    //     args: {
-    //       prefix: prefix,
-    //       public_key: publicKey,
-    //     },
-    //     gas: MAX_TGAS,
-    //     attachedDeposit: TOTAL_DEPOSIT,
-    //   })
   }
 
   async setKeyPairForManager(keyPair) {

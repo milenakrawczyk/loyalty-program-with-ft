@@ -24,7 +24,7 @@ const FT_CONTRACT = MERCHANT + "-ft." + FACTORY_ADDRESS;
 const wallet = new Wallet({ });
 
 // Abstract the logic of interacting with the contract to simplify your flow
-const backend = new Backend({ contractId: MANAGER_CONTRACT, walletToUse: wallet, networkId: NETWORK_ID });
+const backend = new Backend({ contractId: MANAGER_CONTRACT, networkId: NETWORK_ID });
 const factory = new Factory({ contractId: FACTORY_ADDRESS, walletToUse: wallet, backend, managerContractId: MANAGER_CONTRACT });
 const customer = new Customer({ managerContractId: MANAGER_CONTRACT, merchantId: MERCHANT_ADDRESS, ftContractId: FT_CONTRACT, networkId: NETWORK_ID, backend });
 
