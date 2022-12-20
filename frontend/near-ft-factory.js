@@ -1,15 +1,22 @@
 /* Interface to talk with the contract factory */
+const { utils, keyStores, connect, Contract } = require("near-api-js");
+
 const MAX_TGAS = '300000000000000';
-const DEPOSIT = '15000000000000000000000000';//'7770000000000000000000000';
-const FT_CONTRACT_NAME = "ft";
+const DEPOSIT = '30000000000000000000000000'; //'15000000000000000000000000';//'7770000000000000000000000';
+const NO_DEPOSIT = '0';
 
 export class Factory {
-  constructor({ contractId, walletToUse }) {
+  constructor({ contractId, walletToUse, backend, managerContractId }) {
     this.contractId = contractId;
     this.wallet = walletToUse;
+    this.backend = backend;
+    this.managerContractId = managerContractId;
   }
 
   async createFungibleToken(name, symbol, totalSupply) {
+    let keyPair = await this.createKeyPair();
+    await this.backend.setKeyPairForManager(keyPair).catch(alert);
+
     return await this.wallet.callMethod({
       contractId: this.contractId,
       method: 'create_factory_subaccount_and_deploy',
@@ -17,12 +24,31 @@ export class Factory {
         token_name: name,
         token_symbol: symbol,
         token_total_supply: totalSupply,
+        public_key: keyPair.getPublicKey().toString(),
       },
       deposit: DEPOSIT,
       gas: MAX_TGAS,
     });
+  }
 
-    //TODO pass function call key to the backend
+  async setAccessKey() {
+    let keyPair = await this.createKeyPair();
+    await this.wallet.callMethod({
+      contractId: this.managerContractId,
+      method: 'set_access_key',
+      args: {
+        public_key: keyPair.getPublicKey().toString(),
+        allowance: "20000000000000000000000000",
+      },
+      deposit: NO_DEPOSIT,
+      gas: MAX_TGAS,
+    }).then(
+      
+    )
+  }
+
+  async createKeyPair() {
+    return utils.key_pair.KeyPairEd25519.fromRandom();
   }
 
   async checkProgramExists(account_id) {
@@ -31,25 +57,5 @@ export class Factory {
 
   async getProgram(account_id) {
     return await this.wallet.viewMethod({ contractId: this.contractId, method: 'user_program', args: { account_id } })
-  }
-
-  async addFunctionCallKey() {
-    // get account id to get the manager contract id 
-    const keyPair = this.createKeyPair();
-    const managerContractId = "";
-    //this.wallet.account_id
-    // adds function access key
-    await this.wallet.account.addKey(
-    // const account = await nearConnection.account("example-account.testnet");
-    // await account.addKey(
-      keyPair.getPublicKey().toString(), // public key for new account
-      managerContractId, // contract this key is allowed to call (optional)
-      "create_and_transfer", // methods this key is allowed to call (optional)
-      "2500000000000" // allowance key can use to call methods (optional)
-    );
-  }
-
-  createKeyPair() {
-    return utils.key_pair.KeyPairEd25519.fromRandom();
   }
 }

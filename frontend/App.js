@@ -46,7 +46,7 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
   function purchaseWithCC(e) {
     customer.purchaseCoffeeWithCC()
       .then(() => console.log("COFFE BOUGHT"))
-      .catch(alert);
+      .catch(console.log);
   }
 
   function purchaseWithTokens(e) {
@@ -73,10 +73,21 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
         factory.checkProgramExists(MERCHANT_ADDRESS)
         .then((programExists) => setProgramExists(programExists));
       })
+      .then(() => {
+        factory.setAccessKey();
+      })
       .catch(alert)
       .finally(() => {
         setUiPleaseWait(false);
       });
+  }
+
+  async function setAccessKeyTEST() {
+    try {
+      await factory.setAccessKey()
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   function switchView() {
@@ -85,6 +96,7 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
 
   return (
     <div className='main'>
+      <button onClick={setAccessKeyTEST}>SET ACCESS KEY</button>
       <form>
         <Toggle
           text={customerView ? "Customer" : "Merchant"}

@@ -13,10 +13,11 @@ use near_sdk::{env, log, Gas, near_bindgen, AccountId, Balance, Promise, Promise
 use near_sdk::json_types::U128;
 
 
-const MIN_STORAGE: Balance = 1_100_000_000_000_000_000_000_000; //1.1Ⓝ
+const MIN_STORAGE: Balance = 10_100_000_000_000_000_000_000_000; //10.1Ⓝ
 const TOKENS_FOR_COFFEE: U128 = U128(10);
 const TGAS: Gas = Gas(10u64.pow(12));
 const MIN_GAS_FOR_STORAGE_DEPOSIT:Gas = Gas(100);
+const ACCESS_KEY_ALLOWANCE: Balance = 10_000_000_000_000_000_000_000_000;
 
 
 #[derive(BorshDeserialize, BorshSerialize)]
@@ -138,6 +139,38 @@ impl Contract {
         return res.parse().unwrap();
     }
 
+    pub fn set_access_key(&mut self, public_key: PublicKey, allowance: U128) -> Promise {
+        // TODO check if merchant
+        let promise = Promise::new(env::current_account_id()).add_access_key(
+            public_key,
+            allowance.into(),
+            env::current_account_id(),
+            (&"create_and_transfer").to_string(),
+        );
+        return promise
+        .then(
+               Self::ext(env::current_account_id())
+               .with_static_gas(TGAS * 5)
+               .set_access_key_callback(),  
+           );
+    }
+
+    #[private]
+    pub fn set_access_key_callback(
+        &mut self,
+        #[callback_result] set_access_key_result: Result<(), PromiseError>,
+    ) -> bool {
+        if set_access_key_result.is_err(){
+            log!(format!(
+                "Error setting access key"
+            ));
+            return false;
+        }
+        
+        log!(format!("Correctly set access key"));
+
+        true
+    }
 }
 
 #[cfg(all(test, not(target_arch = "wasm32")))]

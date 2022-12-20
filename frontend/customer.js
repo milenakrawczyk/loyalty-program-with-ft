@@ -9,7 +9,7 @@ export class Customer {
     this.ftContractId = ftContractId;
     this.keyStore = new keyStores.BrowserLocalStorageKeyStore();
     this.backend = backend;
-    this.prefix = "user5";
+    this.prefix = "user5"; //TODO
   }
 
   async purchaseCoffeeWithCC() {
@@ -28,7 +28,6 @@ export class Customer {
     }
 
     const keyPair = await this.getKeyPair();
-    console.log(keyPair);
     const inMemoryKeyStore = new keyStores.InMemoryKeyStore()
     inMemoryKeyStore.setKey(this.networkId, this.getAccountName(), keyPair);
 
@@ -62,14 +61,6 @@ export class Customer {
         "300000000000000", // attached GAS (optional)
         "1" // attached deposit in yoctoNEAR (optional)
       );
-        // receiver_id: AccountId, amount: U128
-
-      // const response = await wallet.account().functionCall(contract, method, args, gas, amount);
-    // console.log('response received.');
-
-    // const { transaction_outcome: txo, status } = response;
-
-    //return this.backend.createAndTransfer(keyPair.getPublicKey().toString());
   }
 
   async createKeyPair() {
