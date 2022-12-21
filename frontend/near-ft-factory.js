@@ -2,7 +2,7 @@
 const { utils } = require("near-api-js");
 
 const MAX_TGAS = '300000000000000';
-const DEPOSIT = '30000000000000000000000000';
+const DEPOSIT = '4989140000000000000000000';
 const NO_DEPOSIT = '0';
 
 export class Factory {

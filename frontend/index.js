@@ -36,7 +36,7 @@ window.onload = async () => {
   const root = createRoot(document.getElementById('root'));
   root.render(
     <App isSignedIn={isSignedIn} factory={factory} wallet={wallet} customer={customer}
-         MERCHANT_ADDRESS={MERCHANT_ADDRESS}
+         MERCHANT_ADDRESS={MERCHANT_ADDRESS} MERCHANT={MERCHANT}
     />
   );
 };

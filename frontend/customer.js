@@ -1,7 +1,7 @@
 import { getCustomerPrefix } from "./utils";
 
 const { utils, keyStores, connect, Contract } = require("near-api-js");
-const MAX_TGAS = '300000000000000';
+const FT_TGAS = '3000000000000';
 const TOKENS_FOR_COFFEE = "30";
 const FT_TRANSFER_MIN_DEPOSIT = "1";
 
@@ -61,7 +61,7 @@ export class Customer {
         receiver_id: this.managerContractId,
         amount: TOKENS_FOR_COFFEE,
       },
-      MAX_TGAS,
+      FT_TGAS,
       FT_TRANSFER_MIN_DEPOSIT,
     );
   }

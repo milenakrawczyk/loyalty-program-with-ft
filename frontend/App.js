@@ -5,7 +5,7 @@ import './assets/global.css';
 import { SignOutButton, Toggle } from './ui-components';
 import { getCustomerPrefix } from './utils';
 
-export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_ADDRESS }) {
+export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_ADDRESS, MERCHANT }) {
   const [programExists, setProgramExists] = React.useState(false);
   const [uiPleaseWait, setUiPleaseWait] = React.useState(true);
   const [customerView, setCustomerView] = React.useState(false);
@@ -20,7 +20,7 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
 
   // Get blockchain state once on component load
   React.useEffect(() => {
-    setCustomerUuid(getCustomerPrefix());
+    setCustomerUuid(getCustomerPrefix(MERCHANT));
     setUiPleaseWait(true);
     factory.checkProgramExists(MERCHANT_ADDRESS)
       .then(programExists =>{
@@ -103,8 +103,9 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
           <h1>
             Customer view
           </h1>
+          
           <div className="change">
-            <div>Your ID: {customerUuid}</div>
+            <div>Your ID number: {customerUuid}</div>
             <span className="ftDetails"> 1 Large Coffee </span>
             <span className="ftDetails"> 3$ </span>
             <span className="ftDetails"> 30 Tokens </span>
