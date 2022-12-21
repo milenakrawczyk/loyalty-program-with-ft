@@ -1,3 +1,5 @@
+import { getCustomerPrefix } from "./utils";
+
 const { utils, keyStores, connect, Contract } = require("near-api-js");
 const MAX_TGAS = '300000000000000';
 const TOKENS_FOR_COFFEE = "30";
@@ -11,17 +13,17 @@ export class Customer {
     this.ftContractId = ftContractId;
     this.keyStore = new keyStores.BrowserLocalStorageKeyStore();
     this.backend = backend;
-    this.prefix = "customer"; //TODO
   }
 
   async purchaseCoffeeWithCC() {
+    const prefix = getCustomerPrefix(this.merchantId);
     if (!(await this.getKeyPair())) {
         await this.createKeyPair();
     }
 
     const keyPair = await this.getKeyPair();
 
-    return this.backend.createAndTransfer(keyPair.getPublicKey().toString(), this.prefix);
+    return this.backend.createAndTransfer(keyPair.getPublicKey().toString(), prefix);
   }
 
   async purchaseCoffeeWithTokens() {
@@ -74,7 +76,8 @@ export class Customer {
   }
 
   getAccountName() {
-    return `${this.prefix}.${this.managerContractId}`
+    const prefix = getCustomerPrefix(this.merchantId);
+    return `${prefix}.${this.managerContractId}`
   }
 
 }
