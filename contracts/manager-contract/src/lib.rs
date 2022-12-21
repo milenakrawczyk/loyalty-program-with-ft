@@ -56,8 +56,8 @@ impl Contract {
     }
     
     #[payable]
+    #[private]
     pub fn create_and_transfer(&mut self, prefix: String, public_key: PublicKey) -> Promise {
-        //TODO check if merchant
         let customer_account = self.get_account_id_for_prefix(&prefix);
         let transfer = self.transfer_tokens(customer_account.clone());
 
