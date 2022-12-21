@@ -10,12 +10,11 @@ import { Factory } from './near-ft-factory';
 import { Wallet } from './near-wallet';
 
 const FACTORY_ADDRESS = process.env.CONTRACT_NAME;
-const MERCHANT = "milam";
-const MERCHANT_ADDRESS = MERCHANT + ".testnet"; // this is needed for user view
+const MERCHANT = process.env.MERCHANT_ID;
+const MERCHANT_ADDRESS = MERCHANT + ".testnet";
 const NETWORK_ID = "testnet";
 const MANAGER_CONTRACT = MERCHANT + "-manager." + FACTORY_ADDRESS;
 const FT_CONTRACT = MERCHANT + "-ft." + FACTORY_ADDRESS;
-
 
 // Factory: Address => FT Address
 
