@@ -10,11 +10,6 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
   const [customerView, setCustomerView] = React.useState(false);
 
   const [ftMetadata, setFtMetadata] = React.useState({});
-  const [ftName, setFtName] = React.useState("");
-  const [ftSymbol, setFtSymbol] = React.useState("");
-  const [ftTotalSupply, setFtTotalSupply] = React.useState("");
-  const [ftAccountId, setFtAccountId] = React.useState("");
-
 
   const [name, setName] = React.useState("");
   const [symbol, setSymbol] = React.useState("");
@@ -65,6 +60,11 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
       return;
     }
 
+    if (!name || !symbol) {
+      setErrorMessage("All fields must be filled");
+      return;
+    }
+
     setUiPleaseWait(true);
 
     factory.createFungibleToken(name, symbol, totalSupply)
@@ -95,7 +95,7 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
         />
       </form>
       {customerView ? 
-        <div className="container">
+        <div className={uiPleaseWait ? 'please-wait' : 'container'}>
           <h1>
             Customer view
           </h1>
@@ -146,6 +146,7 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
                 <div className="loader"></div>
               </button>
               <hr />
+              <div className="error">{errorMessage}</div>
             </>
           }
           {isSignedIn ?
@@ -158,7 +159,6 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
       </div>
       )}
 
-      <div className="error">{errorMessage}</div>
       
 
     </div>
