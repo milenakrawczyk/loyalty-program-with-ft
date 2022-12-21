@@ -28,14 +28,39 @@ export class Customer {
 
   async purchaseCoffeeWithTokens() {
     if (!(await this.getKeyPair())) {
-        throw Error("You need to buy coffee with CC first");
+      throw Error("You need to buy coffee with CC first");
     }
 
+    const ftContract = await this.getFtContract();
+    
+    return await ftContract.ft_transfer(
+      {
+        receiver_id: this.managerContractId,
+        amount: TOKENS_FOR_COFFEE,
+      },
+      FT_TGAS,
+      FT_TRANSFER_MIN_DEPOSIT,
+    );
+  }
+
+  async getBalance() {
+    if (!(await this.getKeyPair())) {
+      return 0;
+    }
+    const ftContract = await this.getFtContract();
+    
+    return await ftContract.ft_balance_of(
+      {
+        account_id: this.getAccountName(),
+      },
+    );
+  }
+
+  async getFtContract() {
     const keyPair = await this.getKeyPair();
     const inMemoryKeyStore = new keyStores.InMemoryKeyStore()
     inMemoryKeyStore.setKey(this.networkId, this.getAccountName(), keyPair);
 
-    
     const connectionConfig = {
       networkId: "testnet",
       keyStore: inMemoryKeyStore,
@@ -47,22 +72,13 @@ export class Customer {
     this.nearConnection = await connect(connectionConfig);
     
     const account = await this.nearConnection.account(this.getAccountName());
-    const ftContract = new Contract(
+    return new Contract(
       account, // the account object that is connecting
       this.ftContractId,
       {
         viewMethods: ["ft_balance_of"], // view methods do not change state but usually return a value
         changeMethods: ["ft_transfer"], // change methods modify state
       }
-    );
-    
-    return await ftContract.ft_transfer(
-      {
-        receiver_id: this.managerContractId,
-        amount: TOKENS_FOR_COFFEE,
-      },
-      FT_TGAS,
-      FT_TRANSFER_MIN_DEPOSIT,
     );
   }
 

@@ -10,6 +10,7 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
   const [uiPleaseWait, setUiPleaseWait] = React.useState(true);
   const [customerView, setCustomerView] = React.useState(false);
   const [customerUuid, setCustomerUuid] = React.useState("");
+  const [customerBalance, setCustomerBalance] = React.useState();
 
   const [ftMetadata, setFtMetadata] = React.useState({});
 
@@ -36,6 +37,7 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
         .then(metadata => {
           setFtMetadata(metadata.ft);
         })
+        .then(() => customer.getBalance().then((b) => setCustomerBalance(b))).catch(alert)
         .finally(() => setUiPleaseWait(false));
     }
   }, [programExists]);
@@ -44,12 +46,14 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
   function purchaseWithCC(e) {
     customer.purchaseCoffeeWithCC()
       .then(() => alert("Coffee bought with Credit Card"))
+      .then(() => customer.getBalance().then((b) => setCustomerBalance(b))).catch(alert)
       .catch(alert);
   }
 
   async function purchaseWithTokens(e) {
     customer.purchaseCoffeeWithTokens()
       .then(() => alert("Coffee bought with tokens"))
+      .then(() => customer.getBalance().then((b) => setCustomerBalance(b))).catch(alert)
       .catch(alert);
   }
 
@@ -91,13 +95,15 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
 
   return (
     <div className='main'>
-      <form>
-        <Toggle
-          text={customerView ? "Customer" : "Merchant"}
-          onChange={switchView}
-          checked={customerView}
-        />
-      </form>
+      {programExists &&
+        <form>
+          <Toggle
+            text={customerView ? "Customer" : "Merchant"}
+            onChange={switchView}
+            checked={customerView}
+          />
+        </form>
+      }
       {customerView ? 
         <div className={uiPleaseWait ? 'please-wait' : 'container'}>
           <h1>
@@ -106,6 +112,7 @@ export default function App({ isSignedIn, factory, wallet, customer, MERCHANT_AD
           
           <div className="change">
             <div>Your ID number: {customerUuid}</div>
+            <div>Your tokens balance: {customerBalance}</div>
             <span className="ftDetails"> 1 Large Coffee </span>
             <span className="ftDetails"> 3$ </span>
             <span className="ftDetails"> 30 Tokens </span>
