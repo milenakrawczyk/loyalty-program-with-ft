@@ -34,9 +34,6 @@ Build your contract:
 
     npm run build
 
-Put the merchant name without the network suffix in the `.env.local file.` For example:
-
-  MERCHANT_ID=merchant-name
 
 Deploy your contract to TestNet with a temporary dev account:
 
@@ -46,13 +43,18 @@ Deploy your contract to TestNet with a temporary dev account:
 Usage
 =====
 
-Test your contract:
+Put the merchant name without the network suffix in the `.env.local` file 
+in the `frontend` folder (see `frontend/.env.local.exmaple` file). Here is an example for a merchant account `awesome-merchant.testnet`:
 
-    npm test
+  MERCHANT_ID=awesome-merchant
 
 Start your frontend:
 
-    npm start
+    npm run build:web & npm start
+
+Test your contract:
+
+    npm test
 
 Exploring The Code
 ==================
