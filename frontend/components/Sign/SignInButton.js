@@ -1,4 +1,4 @@
-const SignIn = ({ wallet }) => {
+const SignInButton = ({ wallet }) => {
   return (
     <button className="btn btn-primary" onClick={() => wallet.signIn()}>
       Sign in with NEAR
@@ -6,4 +6,4 @@ const SignIn = ({ wallet }) => {
   );
 };
 
-export default SignIn;
+export default SignInButton;

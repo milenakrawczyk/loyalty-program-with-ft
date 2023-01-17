@@ -1,6 +1,6 @@
 import RewardProgramDetails from './RewardProgramDetails';
 import RewardProgramForm from './RewardProgramForm';
-import SignInOut from './SignInOut';
+import Sign from '../../components/Sign';
 
 const MarchantView = ({
   uiPleaseWait,
@@ -31,7 +31,7 @@ const MarchantView = ({
           />
         )}
 
-        <SignInOut isSignedIn={isSignedIn} wallet={wallet} />
+        <Sign isSignedIn={isSignedIn} wallet={wallet} />
       </div>
     </div>
   );

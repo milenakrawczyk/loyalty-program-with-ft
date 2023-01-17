@@ -1,8 +1,8 @@
 import React from 'react';
 
 import '../assets/global.css';
-import CustomerView from '../components/CustomerView';
-import MarchantView from '../components/MarchantView';
+import CustomerView from '../modules/CustomerView';
+import MarchantView from '../modules/MarchantView';
 
 import Toggle from '../components/Toggle';
 import { getCustomerPrefix, getMerchantAddress } from '../utils/utils';

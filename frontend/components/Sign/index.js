@@ -1,16 +1,16 @@
 import SignOutButton from './SignOutButton';
-import SignIn from './SignIn';
+import SignInButton from './SignInButton';
 
-const SignInOut = ({ isSignedIn, wallet }) => {
+const Sign = ({ isSignedIn, wallet }) => {
   return (
     <>
       {isSignedIn ? (
         <SignOutButton className="btn btn-primary" accountId={wallet.accountId} onClick={() => wallet.signOut()} />
       ) : (
-        <SignIn wallet={wallet} />
+        <SignInButton wallet={wallet} />
       )}
     </>
   );
 };
 
-export default SignInOut;
+export default Sign;
