@@ -7,7 +7,7 @@ import MarchantView from '../modules/MarchantView';
 import Toggle from '../components/Toggle';
 import { getCustomerPrefix, getMerchantAddress } from '../utils/utils';
 
-export default function App({ factory, wallet, customer }) {
+const App = ({ factory, wallet, customer }) => {
   const [isSignedIn, setIsSignedIn] = React.useState(false);
   const [programExists, setProgramExists] = React.useState(false);
   const [uiPleaseWait, setUiPleaseWait] = React.useState(true);
@@ -147,4 +147,6 @@ export default function App({ factory, wallet, customer }) {
       )}
     </div>
   );
-}
+};
+
+export default App;
