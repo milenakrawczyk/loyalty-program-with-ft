@@ -29,7 +29,6 @@ export default function App({ factory, wallet, customer }) {
       setIsSignedIn(isSignedIn);
     };
 
-    console.log('a0');
     checkSignIn();
   }, [wallet]);
 
