@@ -39,6 +39,7 @@
   - [Frontend](#frontend)
   - [Backend.js](#backendjs)
 - [Usage](#usage)
+- [Deploy on Vercel](#deploy-on-vercel)
 - [Roadmap](#roadmap)
 - [Support](#support)
 - [Project assistance](#project-assistance)
@@ -55,18 +56,18 @@
 
 ## About
 
-This project is created for easy-to-start as a React + Rust loyalty program with fungible tokens template in the Pagoda Gallery. It was initialized with [create-near-app]. Use this template and start to build your own gallery project!
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) and [`tailwindcss`](https://tailwindcss.com/docs/guides/nextjs) created for easy-to-start as a React + Rust skeleton template in the Pagoda Gallery. Smart-contract was initialized with [create-near-app]. Use this template and start to build your own gallery project!
 
 ### Built With
 
-[create-near-app]
+[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app), [`tailwindcss`](https://tailwindcss.com/docs/guides/nextjs), [`tailwindui`](https://tailwindui.com/), [`@headlessui/react`](https://headlessui.com/), [`@heroicons/react`](https://heroicons.com/), [create-near-app], [`amazing-github-template`](https://github.com/dec0dOS/amazing-github-template)
 
 Getting Started
 ==================
 
 ### Prerequisites
 
-Make sure you have a [current version of Node.js](https://nodejs.org/en/about/releases/) installed – we are targeting versions `16+`.
+Make sure you have a [current version of Node.js](https://nodejs.org/en/about/releases/) installed – we are targeting versions `18>`.
 
 Read about other [prerequisites](https://docs.near.org/develop/prerequisites) in our docs.
 
@@ -94,7 +95,7 @@ Overview
 ================
 
 The loyalty program with the fungible token template provides a way for merchants to create
-a fungible token program with just a few clicks. 
+a fungible token program with just a few clicks.
 
 The template consists of the following modules:
 
@@ -110,7 +111,7 @@ This template features three smart contracts:
 * factory contract - this is the contract that is deployed by the user. The contract uses a factory pattern
   to deploy fungible token contract and manager contract for each merchant that logs in and creates a loyalty program with the UI.
   See [factory-rust](https://github.com/near-examples/factory-rust) for a simple factory pattern.
-* fungible token contract - this is a standard fungible token contract. 
+* fungible token contract - this is a standard fungible token contract.
   Read more about the FTs [here](https://docs.near.org/develop/relevant-contracts/ft).
 * manager contract - this contract manages the whole loaylty program flow
 
@@ -121,7 +122,7 @@ Frontend consists of two views:
 * merchant view - this is the view where a merchant can create a loyalty program. The merchant needs to log in first.
 * customer view - the view used by the customer to use the loyalty program and gain fungible tokens.
   This view is hidden until a merchant creates a loaylty program. The customer does not have to log in or create an account
-  in order to use the loyalty program. 
+  in order to use the loyalty program.
 
 ## Backend.js
 
@@ -135,6 +136,8 @@ Start your frontend:
 
     npm run build:web & npm start
 
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
 Test your contract:
 
     npm test
@@ -143,9 +146,9 @@ Exploring The Code
 ==================
 
 1. The smart-contract code lives in the `/contracts` folder.
-2. The frontend code lives in the `/frontend` folder. `/frontend/index.html` is a great
-   place to start exploring. Note that it loads in `/frontend/index.js`,
-   this is your entrypoint to learn how the frontend connects to the NEAR blockchain.
+2. The frontend code lives in the `/frontend` folder. You can start editing the page by
+   modifying `frontend/pages/index.tsx`. The page auto-updates as you edit the file.
+   This is your entrypoint to learn how the frontend connects to the NEAR blockchain.
 3. There is a backend code in the `backend.js` file in the `frontend` directory. This code
    simulates a web2 backend.
 4. Test your contract: `npm test`, this will run the tests in `integration-tests` directory.
