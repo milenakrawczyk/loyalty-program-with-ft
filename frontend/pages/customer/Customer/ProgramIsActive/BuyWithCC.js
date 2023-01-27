@@ -28,7 +28,7 @@ const BuyWithCC = ({ purchaseWithCC, product }) => (
           </li>
           <li>
             Upon 'successful' simulated CC payment, it's time to transfer tokens to
-            your own personal account that is created upon your first purchase. Manager contract calls the FT contract
+            your own personal account that is created upon your first purchase. The manager contract calls the FT contract
             perform the transfer.
           </li>
         </ul>
