@@ -87,8 +87,7 @@ Deploy your contract to TestNet with a temporary dev account:
 
     npm run deploy
 
-**Important note**: only the factory contract is and should be deployed. Two other contracts (fungible-token contract and manager contract)
-should only be deployed by the factory contract. This is done automatically when using `npm run deploy` command.
+**Important note**: only the factory contract is and should be deployed. This is done automatically when using `npm run deploy` command. Two other contracts (ft contract and manager contract) should only be deployed by the factory contract.
 
 Overview
 ================
@@ -133,7 +132,7 @@ Usage
 
 Start your frontend:
 
-    npm run build:web & npm start
+    npm run dev
 
 Test your contract:
 
@@ -144,7 +143,7 @@ Exploring The Code
 
 1. The smart-contract code lives in the `/contracts` folder.
 2. The frontend code lives in the `/frontend` folder. `/frontend/index.html` is a great
-   place to start exploring. Note that it loads in `/frontend/index.js`,
+   place to start exploring. Note that it loads in `/frontend/pages/index.js`,
    this is your entrypoint to learn how the frontend connects to the NEAR blockchain.
 3. There is a backend code in the `backend.js` file in the `frontend` directory. This code
    simulates a web2 backend.
