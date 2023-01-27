@@ -5,7 +5,7 @@ const Welcome = ({ ftMetadata, programIsActive, merchantAddress }) => {
     <WelcomeSection>
       {merchantAddress && 'Loyalty Program'}
       {merchantAddress && (programIsActive ? ftMetadata.token_name : `You don't have a loyalty program yet`)}
-      {programIsActive || 'Log in as a merchant to activate the loyalty program. These are the programs already created:'}
+      {programIsActive || 'Choose the loyalty program from the list:'}
     </WelcomeSection>
   );
 };
