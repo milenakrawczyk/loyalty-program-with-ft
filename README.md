@@ -134,6 +134,9 @@ Start your frontend:
 
     npm run dev
 
+**Important note**: This project uses a browser local storage to store important data.
+Be sure to always run it in the same browser. It won't work in an incognito mode.
+
 Test your contract:
 
     npm test
